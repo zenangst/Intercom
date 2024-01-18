@@ -4,6 +4,7 @@ import Combine
 public final class Intercom<App: IntercomApp> {
   private let appType: any IntercomApp.Type
   private let app: any IntercomApp
+  private let notificationCenter = DistributedNotificationCenter.default()
 
   public init(_ appType: App.Type) {
     self.app = appType.init()
@@ -17,13 +18,14 @@ public final class Intercom<App: IntercomApp> {
   public func receive(_ notification: App.Notification, block: @escaping (Notification) -> Void) -> AnyCancellable {
     let rawValue = appType.bundleIdentifier  + "." + notification.rawValue
     let name = Notification.Name(rawValue: rawValue)
-    return DistributedNotificationCenter.default()
+    return notificationCenter
       .publisher(for: name)
       .sink { [app] notification in
         guard let sender = notification.userInfo?["Sender"] as? String,
               app.acceptedSenders.contains(sender) else {
           return
         }
+
         block(notification)
       }
   }
@@ -37,7 +39,7 @@ public final class Intercom<App: IntercomApp> {
 
     let rawValue = appType.bundleIdentifier  + "." + notification.rawValue
     let name = Notification.Name(rawValue: rawValue)
-    DistributedNotificationCenter.default()
+    notificationCenter
       .post(name: name, object: nil, userInfo: userInfo)
   }
 }
