@@ -6,6 +6,7 @@ public struct MouseDefIntercomApp: IntercomApp {
 
   public enum AppNotification: String,  StringRawRepresentable {
     case snapToFullscreen = "SnapToFullscreen"
+    case autoHideDockIfNeeded = "AutoHideDockIfNeeded"
   }
   
   public typealias Notification = AppNotification
