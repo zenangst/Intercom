@@ -2,6 +2,9 @@ public protocol IntercomNotification {}
 public protocol StringRawRepresentable: RawRepresentable where RawValue == String, Self: IntercomNotification {}
 
 public protocol IntercomApp {
-  var bundleIdentifier: String { get }
+  static var bundleIdentifier: String { get }
+  var acceptedSenders: [String] { get }
   associatedtype Notification: StringRawRepresentable
+
+  init()
 }
