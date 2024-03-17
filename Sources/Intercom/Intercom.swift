@@ -19,9 +19,8 @@ public final class Intercom<App: IntercomApp> {
 
   public func receive(_ notification: App.Notification, onRecieve: @escaping (Notification) -> Void) -> AnyCancellable {
     let rawValue = appType.bundleIdentifier  + "." + notification.rawValue
-    let name = Notification.Name(rawValue: rawValue)
     return notificationCenter
-      .publisher(for: name)
+      .publisher(for: Notification.Name(rawValue: rawValue))
       .sink { [app] notification in
         guard let sender = notification.userInfo?["Sender"] as? String,
               let notificationName = notification.userInfo?["Notification"] as? String,
